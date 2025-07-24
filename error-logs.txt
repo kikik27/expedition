@@ -1,0 +1,64 @@
+[2025-07-24T06:11:59.192Z] Unhandled Exception:
+Path: POST /auth/login
+{}
+
+[2025-07-24T06:14:05.645Z] Unhandled Exception:
+Path: POST /auth/login
+{}
+
+[2025-07-24T06:19:08.374Z] Unhandled Exception:
+Path: POST /auth/login
+{
+  "code": "ERR_HTTP_HEADERS_SENT"
+}
+
+[2025-07-24T06:19:08.377Z] Unhandled Exception:
+Path: POST /auth/login
+{
+  "code": "ERR_HTTP_HEADERS_SENT"
+}
+
+[2025-07-24T06:22:00.551Z] Unhandled Exception:
+Path: POST /auth/login
+{
+  "code": "ERR_HTTP_HEADERS_SENT"
+}
+
+[2025-07-24T06:22:00.553Z] Unhandled Exception:
+Path: POST /auth/login
+{
+  "code": "ERR_HTTP_HEADERS_SENT"
+}
+
+[2025-07-24T06:22:44.276Z] Unhandled Exception:
+Path: POST /auth/login
+{
+  "code": "ERR_HTTP_HEADERS_SENT"
+}
+
+[2025-07-24T06:22:44.277Z] Unhandled Exception:
+Path: POST /auth/login
+{
+  "code": "ERR_HTTP_HEADERS_SENT"
+}
+
+[2025-07-24T06:23:43.085Z] Unhandled Exception:
+Path: POST /auth/login
+{
+  "code": "ERR_HTTP_HEADERS_SENT"
+}
+
+[2025-07-24T06:23:43.090Z] Unhandled Exception:
+Path: POST /auth/login
+{
+  "code": "ERR_HTTP_HEADERS_SENT"
+}
+
+[2025-07-24T06:35:15.362Z] Unhandled Exception:
+Path: GET /auth/profile
+{}
+
+[2025-07-24T06:36:03.137Z] Unhandled Exception:
+Path: GET /auth/profile
+{}
+

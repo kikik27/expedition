@@ -1,0 +1,190 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name       String    @db.VarChar()
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt()
+  deleted_at DateTime? @db.Timestamp()
+
+  Permission Permission[]
+  User       User[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id         String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  role       Role    @relation(fields: [role_id], references: [id])
+  role_id    String  @db.Uuid // ← ubah dari VarChar ke Uuid
+  action     String  @db.VarChar()
+  subject    String  @db.VarChar()
+  inverted   Boolean @default(false)
+  conditions Json?   @db.JsonB()
+  reason     String? @db.Text()
+
+  created_at DateTime  @default(now())
+  created_by String?   @db.VarChar(255)
+  updated_at DateTime? @updatedAt()
+  updated_by String?   @db.VarChar(255)
+  deleted_at DateTime? @db.Timestamp()
+  deleted_by String?   @db.VarChar(255)
+
+  @@map("permissions")
+}
+
+model User {
+  id         String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  first_name String  @db.VarChar(100)
+  last_name  String? @db.VarChar(100)
+  email      String  @unique @db.VarChar(255)
+  username   String  @unique @db.VarChar(100)
+  password   String  @db.VarChar(255)
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt()
+  deleted_at DateTime? @db.Timestamp()
+
+  role               Role              @relation(fields: [role_id], references: [id])
+  diver_shipment     Shipment[]        @relation("driver_user")
+  cs_shipment        Shipment[]        @relation("cs_user")
+  shipment_histories shipmentHistory[]
+
+  role_id String @db.Uuid
+
+  @@map("users")
+}
+
+model Province {
+  id        Int       @id
+  name      String
+  regencies Regency[]
+
+  @@map("provinces")
+}
+
+model Regency {
+  id          Int        @id
+  name        String
+  province    Province   @relation(fields: [province_id], references: [id])
+  province_id Int
+  districts   District[]
+  shipments   Shipment[] @relation("origin_regency")
+  shipments2  Shipment[] @relation("destination_regency")
+
+  @@map("regencies")
+}
+
+model District {
+  id         Int     @id
+  name       String
+  regency    Regency @relation(fields: [regency_id], references: [id])
+  regency_id Int
+
+  @@map("districts")
+}
+
+model Service {
+  id        String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name      String
+  category serviceEnum
+  shipments Shipment[]
+
+  created_at       DateTime   @default(now())
+  created_by       String?    @db.VarChar(255)
+  updated_at       DateTime?  @updatedAt()
+  updated_by       String?    @db.VarChar(255)
+  deleted_at       DateTime?  @db.Timestamp()
+  deleted_by       String?    @db.VarChar(255)
+  primary_service  Shipment[] @relation("primary_service")
+  shipment_service Shipment[] @relation("shipment_service")
+  payment_service  Shipment[] @relation("payment_service")
+  package_service  Shipment[] @relation("package_service")
+
+  @@map("services")
+}
+
+model statusShipment {
+  id       String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name     String
+  Shipment Shipment[]
+
+  @@map("status_shipment")
+}
+
+model Shipment {
+  id               String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  shipping_number  String?
+  internal_receipt String?
+  qty              Int?
+  weight           Float?
+  sender_name      String
+  receiver_name    String
+  sender_phone     String
+  receiver_phone   String
+  note             String?
+
+  status_shipment_id     String @db.Uuid
+  origin_regency_id      Int
+  destination_regency_id Int
+  driver_user_id         String @db.Uuid
+  cs_user_id             String @db.Uuid
+  primary_service_id     String @db.Uuid
+  shipment_service_id    String @db.Uuid
+  payment_service_id     String @db.Uuid
+  package_service_id     String @db.Uuid
+
+  created_at DateTime  @default(now())
+  created_by String?   @db.VarChar(255)
+  updated_at DateTime? @updatedAt()
+  updated_by String?   @db.VarChar(255)
+  deleted_at DateTime? @db.Timestamp()
+  deleted_by String?   @db.VarChar(255)
+
+  status_shipment     statusShipment    @relation(fields: [status_shipment_id], references: [id])
+  origin_regency      Regency           @relation("origin_regency", fields: [origin_regency_id], references: [id])
+  destination_regency Regency           @relation("destination_regency", fields: [destination_regency_id], references: [id])
+  driver_user         User              @relation("driver_user", fields: [driver_user_id], references: [id])
+  cs_user             User              @relation("cs_user", fields: [cs_user_id], references: [id])
+  primary_service     Service            @relation("primary_service", fields: [primary_service_id], references: [id])
+  shipment_service    Service            @relation("shipment_service", fields: [shipment_service_id], references: [id])
+  payment_service     Service            @relation("payment_service", fields: [payment_service_id], references: [id])
+  package_service     Service            @relation("package_service", fields: [package_service_id], references: [id])
+  shipment_histories  shipmentHistory[]
+
+  Service Service[]
+}
+
+model shipmentHistory {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  shipment_id String    @db.Uuid
+  note        String?
+  created_at  DateTime  @default(now())
+  created_by  String?   @db.VarChar(255)
+  updated_at  DateTime? @updatedAt()
+  updated_by  String?   @db.VarChar(255)
+  deleted_at  DateTime? @db.Timestamp()
+  deleted_by  String?   @db.VarChar(255)
+
+  shipment Shipment @relation(fields: [shipment_id], references: [id])
+  User     User[]
+}
+
+enum serviceEnum {
+  primary
+  shipment
+  payment
+  package
+}
