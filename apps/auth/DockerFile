@@ -1,29 +1,46 @@
----
-
-# Use Node Alpine as the base image for development
-FROM node:alpine as development
+# ------------------------------------------
+# Step 1: Build Stage
+# ------------------------------------------
+FROM node:18-alpine AS builder
 
 WORKDIR /usr/src/app
 
-COPY package.json package-lock.json ./
-RUN npm install -g && npm install
+# Install Prisma CLI (only needed during build)
+RUN npm install -g prisma
 
+# Install dependencies
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Copy all project files
 COPY . .
 
-RUN npm run build
+# Generate Prisma client
+RUN npx prisma generate
 
-# Create a production image
-FROM node:alpine as production
+# Build only the auth app (make sure you use correct script name)
+RUN npm run build auth
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+# ------------------------------------------
+# Step 2: Production Stage
+# ------------------------------------------
+FROM node:18-alpine AS production
 
+ENV NODE_ENV=production
 WORKDIR /usr/src/app
 
+# Copy only production deps
 COPY package.json package-lock.json ./
-RUN npm install --only=production
+RUN npm install --omit=dev
 
-COPY --from=development /usr/src/app/dist ./dist
-COPY --from=development /usr/src/app/package.json ./package.json
+# Copy compiled build files, prisma, and package.json
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/prisma ./prisma
+COPY --from=builder /usr/src/app/package.json ./package.json
 
-CMD [ "node", "dist/apps/auth/main" ]
+# Make sure Prisma client is generated in production image
+RUN npx prisma generate
+
+# Run only auth service
+CMD ["node", "dist/apps/auth/main.js"]

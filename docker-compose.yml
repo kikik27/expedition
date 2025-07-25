@@ -1,18 +1,18 @@
 services:
-  expeditions:
-    build:
-      context: .
-      dockerfile: apps/expeditions/Dockerfile
-      target: development
-    command: npm run start:dev
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/usr/src/app
-    env_file:
-      - apps/expeditions/.env
-    environment:
-      - NODE_ENV=development
+#  expeditions:
+#    build:
+#      context: .
+#      dockerfile: apps/expeditions/Dockerfile
+#      target: development
+#    command: npm run start:dev
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - .:/usr/src/app
+#    env_file:
+#      - apps/expeditions/.env
+#    environment:
+#      - NODE_ENV=development
   auth:
     build:
       context: .
@@ -22,9 +22,11 @@ services:
     env_file:
       - apps/auth/.env
     ports:
-      - '3001:3001'
+      - '3000:3000'
     volumes:
       - .:/usr/src/app
+    environment:
+      - NODE_ENV=development
   # postgres:
   #     image: postgres:latest
   #     environment:
