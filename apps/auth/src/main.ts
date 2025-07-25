@@ -10,6 +10,7 @@ import {
 import { ValidationPipe } from '@nestjs/common';
 import { ExceptionService, ResponseInterceptor } from '@app/common';
 import * as cookieParser from 'cookie-parser';
+import { UserInterceptor } from '@app/common/interceptor/user-interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
@@ -44,7 +45,7 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, config);
 
     const swaggerCustomOptions: SwaggerCustomOptions = {
-      customSiteTitle: 'Ekspedisi API Docs',
+      customSiteTitle: 'Expedition Auth Gateway',
       customCss: '.swagger-ui .topbar { display: none }',
       explorer: true,
       jsonDocumentUrl: 'docs/json',
@@ -63,6 +64,7 @@ async function bootstrap() {
       host, port
     },
   });
+
   app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
@@ -71,6 +73,7 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new ExceptionService());
   app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalInterceptors(new UserInterceptor());
 
   await app.startAllMicroservices();
   await app.listen(port);

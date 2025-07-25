@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { BaseQueryDto } from './dto/global-paginate.dto';
+import { BaseQueryDto } from './dto';
 
 export interface QueryBuilderOptions {
   searchFields?: string[];
-  filterableFields?: Record<string, any>;
+  filterableFields?: Record<string, string>; // lebih tepat pakai string mapping
   defaultSortField?: string;
   relations?: string[];
 }
@@ -23,16 +23,16 @@ export interface QueryResult<T> {
 @Injectable()
 export class QueryService {
   /**
-   * Build Prisma where clause with dynamic search and filters
+   * Build Prisma where clause with search and filter support
    */
   buildWhereClause<T extends Record<string, any>>(
     queryDto: BaseQueryDto & T,
     searchFields: string[] = ['name'],
-    filterableFields: Record<string, any> = {}
+    filterableFields: Record<string, string> = {}
   ): any {
     const where: any = {};
 
-    // Handle search across multiple fields
+    // Handle search
     if (queryDto.search && searchFields.length > 0) {
       if (searchFields.length === 1) {
         where[searchFields[0]] = {
@@ -44,36 +44,38 @@ export class QueryService {
           [field]: {
             contains: queryDto.search,
             mode: 'insensitive',
-          }
+          },
         }));
       }
     }
 
-    // Handle dynamic filters
-    Object.entries(filterableFields).forEach(([key, value]) => {
-      if (queryDto[key as keyof typeof queryDto] !== undefined && queryDto[key as keyof typeof queryDto] !== '') {
-        where[value || key] = queryDto[key as keyof typeof queryDto];
+    // Handle filters
+    for (const [queryKey, modelField] of Object.entries(filterableFields)) {
+      const value = queryDto[queryKey as keyof typeof queryDto];
+      if (value !== undefined && value !== '') {
+        where[modelField] = value;
       }
-    });
+    }
 
     return where;
   }
 
   /**
-   * Build Prisma orderBy clause
+   * Build Prisma orderBy clause safely
    */
-  buildOrderByClause(sortBy: string = 'created_at', sortOrder: 'asc' | 'desc' = 'desc'): any {
-    return {
-      [sortBy]: sortOrder,
-    };
+  buildOrderByClause(
+    sortBy?: string,
+    sortOrder: 'asc' | 'desc' = 'desc'
+  ): Record<string, 'asc' | 'desc'> | undefined {
+    if (!sortBy) return undefined;
+    return { [sortBy]: sortOrder };
   }
 
   /**
-   * Calculate pagination metadata
+   * Build metadata for pagination
    */
   buildPaginationMeta(total: number, page: number, limit: number) {
     const totalPages = Math.ceil(total / limit);
-
     return {
       total,
       page,
@@ -85,7 +87,7 @@ export class QueryService {
   }
 
   /**
-   * Execute paginated query with all optimizations
+   * Execute paginated query for Prisma model
    */
   async executePaginatedQuery<T, U extends BaseQueryDto>(
     prismaModel: any,
@@ -95,33 +97,33 @@ export class QueryService {
     const {
       searchFields = ['name'],
       filterableFields = {},
-      defaultSortField = 'created_at',
-      relations = []
+      defaultSortField = '',
+      relations = [],
     } = options;
 
-    const { page = 1, limit = 10, sortBy = defaultSortField, sortOrder = 'desc' } = queryDto;
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = defaultSortField,
+      sortOrder = 'desc',
+    } = queryDto;
+
     const skip = (page - 1) * limit;
 
-    // Build where clause
     const where = this.buildWhereClause(queryDto, searchFields, filterableFields);
-
-    // Build orderBy clause
     const orderBy = this.buildOrderByClause(sortBy, sortOrder);
+    const include = relations.length
+      ? relations.reduce((acc, rel) => ({ ...acc, [rel]: true }), {})
+      : undefined;
 
-    // Build include/select clause for relations
-    const includeClause = relations.length > 0
-      ? { include: relations.reduce((acc, rel) => ({ ...acc, [rel]: true }), {}) }
-      : {};
-
-    // Execute count and find queries in parallel
     const [total, data] = await Promise.all([
       prismaModel.count({ where }),
       prismaModel.findMany({
         where,
         skip,
         take: limit,
-        orderBy,
-        ...includeClause,
+        ...(orderBy && { orderBy }),
+        ...(include && { include }),
       }),
     ]);
 

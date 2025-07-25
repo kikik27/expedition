@@ -32,13 +32,13 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Serialize(UserDto)
   getProfile(@CurrentUser() user: User) {
+    console.log(user)
     return user;
   }
 
   @UseGuards(JwtAuthGuard)
   @MessagePattern('authenticate')
   async authenticate(@Payload() data: any) {
-    console.log(`Data auth${data}`)
     return data.user;
   }
 }

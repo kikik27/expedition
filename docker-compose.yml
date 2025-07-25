@@ -9,19 +9,27 @@ services:
       - "3000:3000"
     volumes:
       - .:/usr/src/app
+    env_file:
+      - apps/expeditions/.env
+    environment:
+      - NODE_ENV=development
   auth:
     build:
       context: .
       dockerfile: apps/auth/Dockerfile
       target: development
     command: npm run start:dev auth
+    env_file:
+      - apps/auth/.env
     ports:
       - '3001:3001'
-  postgres:
-      image: postgres:latest
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: expeditions_db
-      ports:
-        - "5432:5432"
+    volumes:
+      - .:/usr/src/app
+  # postgres:
+  #     image: postgres:latest
+  #     environment:
+  #       POSTGRES_USER: postgres
+  #       POSTGRES_PASSWORD: password
+  #       POSTGRES_DB: expeditions_db
+  #     ports:
+  #       - "5432:5432"

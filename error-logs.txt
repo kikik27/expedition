@@ -62,3 +62,156 @@ Path: GET /auth/profile
 Path: GET /auth/profile
 {}
 
+[2025-07-24T09:23:05.406Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10&sortOrder=desc
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:23:15.809Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:24:56.874Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:26:59.039Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:27:01.802Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:28:57.198Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:29:07.959Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10&sortOrder=desc
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:29:12.640Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:30:32.746Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10&sortOrder=desc
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:31:06.437Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10&sortOrder=desc
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:32:00.590Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:33:29.399Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:33:41.154Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:34:03.699Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:35:36.722Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10&sortOrder=desc
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:41:29.412Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10&sortBy=a&sortOrder=asc
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:41:45.687Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10&sortBy=nama&sortOrder=asc
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:43:05.294Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10&search=aceh&sortOrder=asc
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:43:18.354Z] Unhandled Exception:
+Path: GET /region/provinces?page=1&limit=10&search=11&sortOrder=asc
+{
+  "name": "PrismaClientValidationError",
+  "clientVersion": "6.12.0"
+}
+
+[2025-07-24T09:52:06.625Z] Unhandled Exception:
+Path: GET /rbac/permissions?page=1&limit=10&sortOrder=desc
+{}
+
+[2025-07-24T09:52:13.839Z] Unhandled Exception:
+Path: GET /rbac/permissions?page=1&limit=10&sortOrder=desc
+{}
+
+[2025-07-24T09:52:15.829Z] Unhandled Exception:
+Path: GET /rbac/permissions?page=1&limit=10
+{}
+
+[2025-07-24T09:53:08.438Z] Unhandled Exception:
+Path: GET /rbac/permissions?page=1&limit=10
+{}
+
+[2025-07-24T09:54:18.926Z] Unhandled Exception:
+Path: GET /rbac/permissions?page=1&limit=10&sortOrder=desc
+{}
+

@@ -45,7 +45,7 @@ export class BaseQueryDto {
   })
   @IsOptional()
   @IsString({ message: 'Sort field must be a string' })
-  sortBy?: string = 'created_at';
+  sortBy?: string = '';
 
   @ApiPropertyOptional({
     description: 'Sort order',
